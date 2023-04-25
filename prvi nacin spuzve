@@ -1,0 +1,82 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_SPUZVE 10
+
+struct Spuzva {
+   int id;
+   char boja[15];
+   float povrsina;
+   char upija_vod[15];
+};
+
+void ispis_spuzvi(struct Spuzva spuzve[], int n);
+
+int main() {
+   struct Spuzva spuzve[MAX_SPUZVE];
+   int n = 0;
+   
+   // Otvaranje datoteke u koju smo spremljivali spužve
+   FILE *datoteka = fopen("spuzve.txt", "r");
+   if (datoteka == NULL) {
+      printf("Greska pri otvaranju datoteke.\n");
+      return 1;
+   }
+   
+   // Citanje spužvi iz datoteke i spremanje u polje struktura
+   while (fscanf(datoteka, "%d %s %f %s", &spuzve[n].id, spuzve[n].boja, &spuzve[n].povrsina, spuzve[n].upija_vod) == 4) {
+      n++;
+      if (n >= MAX_SPUZVE) {
+         printf("Dosegli smo maksimalni broj spuzvi.\n");
+         break;
+      }
+   }
+   
+   // Ispis svih spužvi
+   printf("Sve spuzve:\n");
+   ispis_spuzvi(spuzve, n);
+   
+   // Unos nove spužve
+   printf("Unesite nove podatke za spuzvu:\n");
+   printf("ID: ");
+   scanf("%d", &spuzve[n].id);
+   printf("Boja: ");
+   scanf("%s", spuzve[n].boja);
+   printf("Povrsina: ");
+   scanf("%f", &spuzve[n].povrsina);
+   printf("Upija li dobro vodu (da/ne): ");
+   scanf("%s", spuzve[n].upija_vod);
+   n++;
+   
+   // Ispis svih spužvi, ukljucujuci i novu spužvu
+   printf("\nSve spuzve nakon unosa nove spuzve:\n");
+   ispis_spuzvi(spuzve, n);
+   
+      // Spremanje svih spužvi u datoteku
+   datoteka = fopen("spuzve.txt", "w");
+   if (datoteka == NULL) {
+      printf("Greska pri otvaranju datoteke.\n");
+      return 1;
+   }
+   
+   for (int i = 0; i < n; i++) {
+      fprintf(datoteka, "%d %s %.2f %s\n", spuzve[i].id, spuzve[i].boja, spuzve[i].povrsina, spuzve[i].upija_vod);
+   }
+   
+   fclose(datoteka);
+   
+   return 0;
+}
+
+// Funkcija za ispis svih spužvi u polju
+void ispis_spuzvi(struct Spuzva spuzve[], int n) {
+   for (int i = 0; i < n; i++) {
+      printf("ID: %d\n", spuzve[i].id);
+      printf("Boja: %s\n", spuzve[i].boja);
+      printf("Povrsina: %.2f\n", spuzve[i].povrsina);
+      printf("Upija li dobro vodu: %s\n", spuzve[i].upija_vod);
+      printf("\n");
+   }
+}
+
+   
